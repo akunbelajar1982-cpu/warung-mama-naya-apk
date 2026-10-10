@@ -1,29 +1,24 @@
-name: Build APK Mama Naya
-
+name: Build APK Mama Naya V83 Final
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        with: { node-version: 20 }
       - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+        with: { distribution: 'temurin', java-version: '17' }
       - run: npm install
       - run: npx cap add android
-      - run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+      - name: Fix Izin Kamera
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          sed -i 's/<manifest/<manifest xmlns:tools="http:\/\/schemas.android.com\/tools"/' $M
+          grep -q "CAMERA" $M || sed -i '/<application/i \    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />' $M
+      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
-        with:
-          name: Warung-Mama-Naya-APK
-          path: android/app/build/outputs/apk/debug/*.apk
+        with: { name: Warung-Mama-Naya-V83-FINAL, path: android/app/build/outputs/apk/debug/*.apk }
