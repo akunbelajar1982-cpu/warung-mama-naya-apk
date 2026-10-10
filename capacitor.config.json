@@ -1,0 +1,6 @@
+{
+  "appId": "com.mamanaya.kasir",
+  "appName": "Warung Mama Naya",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
